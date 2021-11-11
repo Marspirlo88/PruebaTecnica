@@ -94,16 +94,33 @@ public class Servlet extends HttpServlet {
             throws ServletException, IOException {
 
         String nombre = req.getParameter("nombre");
+     
+        if (nombre.isEmpty()){ 
+            //nombre==null||nombre.equals("")||nombre.equals(" ")
+            String error = "Ingrese un valor para la busqueda";
+            req.setAttribute("vacio", error);
+              RequestDispatcher rs = req.getRequestDispatcher("index.jsp");
+        rs.forward(req, res);
+        
+        }
+        else{
 
         Constructor nuevo = new Constructor();
 
         nuevo.setBuscador(nombre);
         System.out.println("Nombre parametro : " + nombre);
         List<Constructor> lista2 = new Api().buscar(nombre);
+            if (lista2.isEmpty()) {
+                String error = "No existe Personaje o valor nullo";
+               req.setAttribute("vacio", error); 
+               RequestDispatcher rs = req.getRequestDispatcher("index.jsp");
+               rs.forward(req, res);
+            }else{
         req.setAttribute("lista2", lista2);
         RequestDispatcher rs = req.getRequestDispatcher("Mostrar.jsp");
         rs.forward(req, res);
-
+        }
+        }
     }
 
     /**
